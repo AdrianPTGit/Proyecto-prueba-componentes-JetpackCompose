@@ -6,29 +6,26 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.* // Contiene Column, Row, Spacer, etc.
-import androidx.compose.material3.* // Contiene Button, Text, TextField, Checkbox, etc.
-import androidx.compose.runtime.* // Para manejar estados con remember y mutableStateOf
+import androidx.compose.foundation.layout.* // Column, Row, Spacer, etc.
+import androidx.compose.material3.* // Button, Text, TextField, Checkbox, etc.
+import androidx.compose.runtime.* // remember, mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource // Para cargar imágenes desde recursos
-import androidx.compose.ui.unit.dp // Para definir tamaños en dp
-import com.example.probarcomponentes.ui.theme.ProbarComponentesTheme // Tema de la app
+import androidx.compose.ui.res.painterResource // Para cargar imágenes
+import androidx.compose.ui.unit.dp // Tamaños en dp
+import com.example.probarcomponentes.ui.theme.ProbarComponentesTheme
+import kotlinx.coroutines.launch
 
-// --- Clase principal de la aplicación ---
+// --- Clase principal ---
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // Habilita el diseño de borde a borde (sin barras de sistema visibles)
         enableEdgeToEdge()
-
-        // Define el contenido de la interfaz con Compose
         setContent {
-            // Aplica el tema de la app
             ProbarComponentesTheme {
-                // Llama al composable principal que contiene los componentes de la UI
-                Componentes()
+                // ✅ Ambas funciones son composables y están al mismo nivel
+               // Componentes()
+                ProbarSnackBar()
             }
         }
     }
@@ -37,55 +34,48 @@ class MainActivity : ComponentActivity() {
 // --- Función composable principal ---
 @Composable
 fun Componentes() {
-    // 🔹 Declaración de estados recordados (persisten mientras la composición esté activa)
-    var selectedOption by remember { mutableStateOf("option1") } // Guarda la opción seleccionada del RadioButton
-    var isChecked by remember { mutableStateOf(false) }           // Guarda el estado del Checkbox (marcado o no)
-    var text by remember { mutableStateOf("") }                   // Guarda el texto escrito en el TextField
+    var selectedOption by remember { mutableStateOf("option1") }
+    var isChecked by remember { mutableStateOf(false) }
+    var text by remember { mutableStateOf("") }
 
-    // 🔹 Columna principal: organiza todo el contenido de arriba a abajo
     Column(
         modifier = Modifier
-            .fillMaxSize()             // Ocupa toda la pantalla
-            .padding(16.dp),           // Margen interior
-        verticalArrangement = Arrangement.Top,        // Coloca los elementos desde arriba
-        horizontalAlignment = Alignment.CenterHorizontally // Centra horizontalmente los elementos
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(20.dp)) // Espacio inicial superior
+        Spacer(modifier = Modifier.height(20.dp))
 
-        // --- Bloque: Botón + Imagen ---
+        // --- Botón + Imagen ---
         Row(
-            modifier = Modifier.fillMaxWidth(), // La fila ocupa todo el ancho disponible
-            horizontalArrangement = Arrangement.SpaceAround, // Espacia los elementos de forma uniforme
-            verticalAlignment = Alignment.CenterVertically   // Centra los elementos verticalmente
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceAround,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Button(onClick = { }) { // Botón sin acción
-                Text("Mi botón")    // Texto que muestra el botón
+            Button(onClick = { }) {
+                Text("Mi botón")
             }
 
-            // Imagen cargada desde los recursos de la app
             Image(
                 painter = painterResource(id = R.drawable.imagen2),
                 contentDescription = "Imagen de una flor amarilla",
-                modifier = Modifier.size(100.dp) // Tamaño de la imagen
+                modifier = Modifier.size(100.dp)
             )
         }
 
-        Spacer(modifier = Modifier.height(30.dp)) // Espacio entre bloques
+        Spacer(modifier = Modifier.height(30.dp))
 
-        // --- Bloque: Opciones de RadioButton ---
-        Row(
-            verticalAlignment = Alignment.CenterVertically // Alinea los elementos al centro vertical
-        ) {
-            // RadioButton 1
+        // --- RadioButtons ---
+        Row(verticalAlignment = Alignment.CenterVertically) {
             RadioButton(
-                selected = selectedOption == "option1",   // Seleccionado si el estado coincide
-                onClick = { selectedOption = "option1" }  // Cambia el estado al hacer clic
+                selected = selectedOption == "option1",
+                onClick = { selectedOption = "option1" }
             )
-            Text("Opción 1") // Etiqueta de la opción
+            Text("Opción 1")
 
-            Spacer(modifier = Modifier.width(16.dp)) // Espacio entre los botones
+            Spacer(modifier = Modifier.width(16.dp))
 
-            // RadioButton 2
             RadioButton(
                 selected = selectedOption == "option2",
                 onClick = { selectedOption = "option2" }
@@ -93,48 +83,114 @@ fun Componentes() {
             Text("Opción 2")
         }
 
-        Spacer(modifier = Modifier.height(20.dp)) // Espacio vertical entre bloques
+        Spacer(modifier = Modifier.height(20.dp))
 
-        // --- Bloque: Checkbox ---
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+        // --- Checkbox ---
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Checkbox(
-                checked = isChecked,               // Estado actual del checkbox
-                onCheckedChange = { isChecked = it } // Cambia el estado al hacer clic
+                checked = isChecked,
+                onCheckedChange = { isChecked = it }
             )
-            Text("Aceptar términos") // Texto junto al checkbox
+            Text("Aceptar términos")
         }
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // --- Bloque: Campo de texto ---
+        // --- TextField ---
         TextField(
-            value = text,                           // Valor actual del texto
-            onValueChange = { text = it },          // Actualiza el estado cuando el usuario escribe
-            label = { Text("Introduce texto") },    // Etiqueta del campo
-            modifier = Modifier.fillMaxWidth()      // El campo ocupa todo el ancho disponible
+            value = text,
+            onValueChange = { text = it },
+            label = { Text("Introduce texto") },
+            modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // --- Bloque: TextButton ---
-        TextButton(
-            onClick = { println("TextButton pulsado") } // Acción al pulsar (imprime en la consola)
-        ) {
-            Text("Haz clic aquí") // Texto visible en el botón
+        // --- TextButton ---
+        TextButton(onClick = { println("TextButton pulsado") }) {
+            Text("Haz clic aquí")
         }
     }
 }
 
+// --- ✅ Snackbar separado (fuera de Componentes) ---
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ProbarSnackBar() {
+    // 🔹 Crea un estado para controlar los mensajes del Snackbar.
+    // SnackbarHostState permite mostrar, ocultar o actualizar un snackbar.
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    // 🔹 Crea un alcance de corrutina para ejecutar tareas asíncronas (como mostrar el Snackbar).
+    val scope = rememberCoroutineScope()
+
+    // 🔹 Scaffold es una estructura base de Material Design.
+    // Permite incluir barras superiores, botones flotantes, snackbars, etc.
+    Scaffold(
+        modifier = Modifier.fillMaxSize(), // Hace que ocupe toda la pantalla.
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) } // Conecta el Snackbar al Scaffold.
+    ) { innerPadding -> // innerPadding evita que el contenido se superponga con el Snackbar o la barra del sistema.
+
+        // 🔹 Contenedor en columna (vertical)
+        Column(
+            modifier = Modifier
+                .padding(innerPadding) // Aplica el padding interno del Scaffold.
+                .fillMaxSize()          // Ocupa todo el espacio disponible.
+                .padding(16.dp),        // Añade margen interno de 16dp.
+            verticalArrangement = Arrangement.Center,        // Centra los elementos verticalmente.
+            horizontalAlignment = Alignment.CenterHorizontally // Centra los elementos horizontalmente.
+        ) {
+
+            // 🔹 Botón que, al pulsarse, muestra el Snackbar.
+            Button(
+                onClick = {
+                    // Al hacer clic, lanzamos una corrutina (porque showSnackbar es suspend).
+                    scope.launch {
+                        // Muestra el Snackbar con un mensaje y una acción opcional ("Deshacer").
+                        val result = snackbarHostState.showSnackbar(
+                            message = "Acción realizada con éxito ✅",
+                            actionLabel = "Deshacer"
+                        )
+
+                        // 🔹 Cuando el Snackbar desaparece o se pulsa la acción, devuelve un resultado:
+                        when (result) {
+                            // Si el usuario pulsa la acción "Deshacer"
+                            SnackbarResult.ActionPerformed -> {
+                                // Muestra otro Snackbar indicando que la acción se revirtió.
+                                snackbarHostState.showSnackbar("Acción deshecha 🔄")
+                            }
+
+                            // Si el usuario cierra o ignora el Snackbar
+                            SnackbarResult.Dismissed -> {
+                                println("Snackbar cerrado")
+                            }
+                        }
+                    }
+                }
+            ) {
+                // 🔹 Texto dentro del botón
+                Text("Mostrar Snackbar")
+            }
+        }
+    }
+}
 /*
-🔍 RESUMEN DE QUÉ HACE CADA PARTE:
-----------------------------------------------------------
-- Column → organiza los bloques verticalmente.
-- Row → organiza los elementos dentro de un bloque horizontalmente.
-- horizontalArrangement = Arrangement.SpaceAround → distribuye los elementos de forma simétrica.
-- Spacer → añade separación vertical (height) o horizontal (width).
-- Alignment.CenterVertically → alinea verticalmente los elementos dentro de la fila.
-- remember + mutableStateOf → permite guardar y actualizar estados en la UI de Compose.
-----------------------------------------------------------
-*/
+Resumen rápido:
+
+Elemento	                            Función
+----------------------------------------------------------------------------------------------------
+
+Scaffold	                            Estructura base que aloja el Snackbar.
+
+SnackbarHostState	                    Gestiona el estado (mostrar/ocultar) del Snackbar.
+
+rememberCoroutineScope()	            Permite ejecutar tareas suspendidas desde un evento de UI.
+
+scope.launch	                        Lanza la corrutina que muestra el Snackbar.
+
+showSnackbar()	                        Muestra el mensaje temporal con una posible acción.
+
+SnackbarResult.ActionPerformed	        Se ejecuta si el usuario pulsa “Deshacer”.
+
+SnackbarResult.Dismissed	            Se ejecuta si el Snackbar desaparece sin interacción.
+ */
