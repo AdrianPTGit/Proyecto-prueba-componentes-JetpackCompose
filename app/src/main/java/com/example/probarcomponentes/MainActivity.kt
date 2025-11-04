@@ -33,49 +33,70 @@ class MainActivity : ComponentActivity() {
 
 // --- Función composable principal ---
 @Composable
+@Composable
 fun Componentes() {
+    // --- VARIABLES DE ESTADO ---
+    // remember + mutableStateOf permiten que Compose recuerde y reactive la interfaz al cambiar su valor
+
+    // Guarda la opción seleccionada entre los RadioButtons
     var selectedOption by remember { mutableStateOf("option1") }
+
+    // Guarda si el CheckBox está marcado o no
     var isChecked by remember { mutableStateOf(false) }
+
+    // Guarda el texto introducido en el campo de texto
     var text by remember { mutableStateOf("") }
 
+
+    // --- CONTENEDOR PRINCIPAL ---
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
+            .fillMaxSize()     // Hace que la columna ocupe toda la pantalla
+            .padding(16.dp),   // Añade un margen interno de 16dp
+        verticalArrangement = Arrangement.Top,         // Los elementos se organizan desde arriba
+        horizontalAlignment = Alignment.CenterHorizontally // Centra horizontalmente el contenido
     ) {
+
+        // Espacio inicial de separación
         Spacer(modifier = Modifier.height(20.dp))
 
-        // --- Botón + Imagen ---
+
+        // --- FILA: Botón + Imagen ---
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceAround,
-            verticalAlignment = Alignment.CenterVertically
+            modifier = Modifier.fillMaxWidth(),                     // Ocupa todo el ancho
+            horizontalArrangement = Arrangement.SpaceAround,         // Distribuye los elementos de forma uniforme
+            verticalAlignment = Alignment.CenterVertically           // Centra verticalmente los elementos
         ) {
+            // Botón simple que no ejecuta ninguna acción por ahora
             Button(onClick = { }) {
                 Text("Mi botón")
             }
 
+            // Imagen cargada desde los recursos drawables
             Image(
-                painter = painterResource(id = R.drawable.imagen2),
-                contentDescription = "Imagen de una flor amarilla",
-                modifier = Modifier.size(100.dp)
+                painter = painterResource(id = R.drawable.imagen2),   // Imagen en res/drawable/imagen2
+                contentDescription = "Imagen de una flor amarilla",   // Texto alternativo accesible
+                modifier = Modifier.size(100.dp)                      // Tamaño fijo de 100dp
             )
         }
 
+        // Separación vertical entre secciones
         Spacer(modifier = Modifier.height(30.dp))
 
-        // --- RadioButtons ---
+
+        // --- RADIO BUTTONS (selección única) ---
         Row(verticalAlignment = Alignment.CenterVertically) {
+            // Primer RadioButton
             RadioButton(
-                selected = selectedOption == "option1",
-                onClick = { selectedOption = "option1" }
+                selected = selectedOption == "option1",       // Marcado si la opción actual es "option1"
+                onClick = { selectedOption = "option1" }      // Al hacer clic, cambia el valor del estado
             )
             Text("Opción 1")
 
+            // Espacio entre las dos opciones
             Spacer(modifier = Modifier.width(16.dp))
 
+            // Segundo RadioButton
             RadioButton(
                 selected = selectedOption == "option2",
                 onClick = { selectedOption = "option2" }
@@ -85,33 +106,56 @@ fun Componentes() {
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // --- Checkbox ---
+
+        // --- CHECKBOX (selección múltiple o binaria) ---
         Row(verticalAlignment = Alignment.CenterVertically) {
             Checkbox(
-                checked = isChecked,
-                onCheckedChange = { isChecked = it }
+                checked = isChecked,                    // Estado actual del checkbox
+                onCheckedChange = { isChecked = it }    // Cambia el valor al marcar o desmarcar
             )
             Text("Aceptar términos")
         }
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // --- TextField ---
+
+        // --- CAMPO DE TEXTO (entrada de usuario) ---
         TextField(
-            value = text,
-            onValueChange = { text = it },
-            label = { Text("Introduce texto") },
-            modifier = Modifier.fillMaxWidth()
+            value = text,                               // Valor actual del texto
+            onValueChange = { text = it },              // Actualiza el estado al escribir
+            label = { Text("Introduce texto") },        // Etiqueta del campo
+            modifier = Modifier.fillMaxWidth()          // Ocupa todo el ancho disponible
         )
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // --- TextButton ---
-        TextButton(onClick = { println("TextButton pulsado") }) {
-            Text("Haz clic aquí")
+
+        // --- BOTÓN DE TEXTO ---
+        TextButton(
+            onClick = { println("TextButton pulsado") } // Acción al hacer clic (solo imprime un mensaje)
+        ) {
+            Text("Haz clic aquí")                       // Texto del botón
         }
     }
 }
+
+/*
+RESUMEN DE LOS COMPONENTES:
+
+Elemento	                        Función
+----------------------------------------------------------------------------------------------------
+Column	                            Organiza los elementos en vertical.
+Row	                               Organiza elementos en horizontal.
+Spacer	                            Añade espacio entre elementos.
+Button	                            Botón con fondo (Material 3).
+Image	                            Muestra imágenes desde recursos.
+RadioButton	                        Permite elegir una opción entre varias.
+Checkbox	                        Permite activar o desactivar una opción.
+TextField	                        Campo de texto editable.
+TextButton	                        Botón de texto plano sin fondo.
+remember + mutableStateOf	        Crea variables reactivas que actualizan la UI automáticamente.
+ */
+
 
 // --- ✅ Snackbar separado (fuera de Componentes) ---
 @OptIn(ExperimentalMaterial3Api::class)
