@@ -1,0 +1,7 @@
+- Finalidad: Conocer los diferentes elementos UI disponibles en Jetpack:
+  - Texto
+  - cajas de texto 
+  - botones 
+  - listas
+  - Snackbars
+  - cuadros de información etc…
